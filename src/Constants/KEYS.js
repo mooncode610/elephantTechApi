@@ -1,0 +1,1 @@
+exports.DATABASE_URL = 'mongodb+srv://admin:Admin@123@cluster0.vskcf.mongodb.net/ElephantId-Tech?retryWrites=true&w=majority'
