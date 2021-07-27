@@ -3,6 +3,7 @@ exports.USER_NOT_EXISTS = 'User not exists';
 exports.USER_SUCCESS_SIGNUP = 'User Signed up Successfully';
 exports.USER_SUCCESS_LOGIN = 'login Successfully';
 exports.USER_FAILED = 'User does not exits';
+exports.USER_AUTH_FAILED = 'Email Address and Password are Incorrect';
 
 exports.SUCCESS_TRUE = true;
 exports.SUCCESS_FALSE = false;

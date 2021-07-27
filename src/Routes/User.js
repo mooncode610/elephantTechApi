@@ -3,6 +3,7 @@ const {
     USER_NOT_EXISTS,
     USER_SUCCESS_LOGIN,
     USER_SUCCESS_SIGNUP,
+    USER_AUTH_FAILED,
     SUCCESS_FALSE,
     SUCCESS_TRUE,
 } = require('../Constants/Message');
@@ -13,7 +14,7 @@ const {
     SUCCESS
 } = require('../Constants/StatusCode');
 const { generateMessage, } = require('../utils/generateMessage');
-const { createUser, findUser,getAllUsers } = require('../utils/utilities');
+const { createUser, findUser,getAllUsers,comparePassword } = require('../utils/utilities');
 
 
 
@@ -22,9 +23,11 @@ const { createUser, findUser,getAllUsers } = require('../utils/utilities');
 exports.SignUp = async (req, res) => {
     try {
         const result = await findUser(req, res);
+        console.log("result",result);
         const { data } = result;
         if (!data) {
-            const user = createUser(req);
+            const user = await createUser(req);
+            console.log("saving user",user)
             await user.save();
             return res.status(OK).json(generateMessage(USER_SUCCESS_SIGNUP, OK, SUCCESS_TRUE, null));
         }
@@ -41,8 +44,15 @@ exports.Login = async (req, res) => {
     try {
         const result = await findUser(req, res);
         const { data } = result;
-        if (data) {
-            return res.status(OK).json(generateMessage(USER_SUCCESS_LOGIN, SUCCESS, SUCCESS_TRUE, data))
+        if (data && data.length > 0) {
+            const userData = data[0];
+            const isMatched = await comparePassword(req.body.password,userData.password);
+            if(isMatched){
+                return res.status(OK).json(generateMessage(USER_SUCCESS_LOGIN, SUCCESS, SUCCESS_TRUE, data))
+            }else {
+                return res.status(UN_AUTH).json(generateMessage(USER_AUTH_FAILED, FAILED, SUCCESS_FALSE, null))
+            }
+            
         } else {
             return res.status(UN_AUTH).json(generateMessage(USER_NOT_EXISTS, UN_AUTH, SUCCESS_FALSE, null))
         }

@@ -37,7 +37,6 @@ exports.CreateElephant= async (req, res) => {
 
 
 exports.FindElephant = async (req, res) => {
-    console.log(req.body)
     try {
         const result = await findElephant(req, res);
         const { data } = result;
@@ -56,7 +55,7 @@ exports.GetAllElephants = async (req, res) => {
     try {
         const result = await getAllElephants(req, res);
         const { data } = result;
-        return res.status(SUCCESS).json(generateMessage(ELEPHANT_EXISTS, SUCCESS, SUCCESS_TRUE, data));
+        return res.status(SUCCESS).json(generateMessage(ELEPHANT_SUCCESS_GET, SUCCESS, SUCCESS_TRUE, data));
     }
     catch (error) {
         return res.status(FAILED).json(generateMessage(error.message, FAILED, SUCCESS_FALSE, null))

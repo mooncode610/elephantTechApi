@@ -11,6 +11,7 @@ const elephantSchema = mongoose.Schema({
   Date: { type: String, required: true },
   specialFeatures: { type: String },
   comments: { type: String },
+  seenWith:{type:String},
   images: { type: Array },
 });
 
