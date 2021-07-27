@@ -4,6 +4,7 @@ const router = express.Router();
 const { CreateElephant, FindElephant,GetAllElephants,GetElephantById,UpdateElephant } = require('../Routes/Elephants');
 const {ELEPHANT_GET_BY_ID, ELEPHANT_POST,ELEPHANT_GET_ALL,ELEPHANT_UPDATE,ELEPHANT_SPECIFIC } = require('../Constants/Routes');
 
+
 exports.UPDATE_ELEPHANT = router.post(ELEPHANT_UPDATE,UpdateElephant);
 exports.GET_ALL_ELEPHANTS = router.get(ELEPHANT_GET_ALL,GetAllElephants);
 exports.GET_ELEPHANT_BY_ID = router.post(ELEPHANT_GET_BY_ID,GetElephantById);

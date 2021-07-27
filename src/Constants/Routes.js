@@ -13,5 +13,5 @@ exports.ELEPHANT_SPECIFIC = '/getSpecificElephant';
 
 exports.FILE_UPLOAD = '/fileUpload';
 exports.FILE_UPLOAD_UPLOAD = '/upload';
-
+exports.GET_FILE = '/file/';
 

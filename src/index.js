@@ -6,16 +6,13 @@ const mongoose = require('mongoose');
 
 const userController = require('./Controllers/UserController');
 const elephantController = require('./Controllers/ElephantController')
-// const vehicleController = require('./Controllers/Vehicle');
-// const driverController = require('./Controllers/Driver');
-// const tripController = require('./Controllers/Trip');
-// const requestController = require('./Controllers/Request');
-// const onlineDriverController = require('./Controllers/OnlineDriver');
-// const fileUploadController = require('./Controllers/Upload');
-// const paymentController = require('./Controllers/PaymentCard');
+const fileUploadController = require('./Controllers/FileController');
+
 const {
   USER,
   ELEPHANT,
+  FILE_UPLOAD,
+  FILE_UPLOAD_UPLOAD
 } = require('./Constants/Routes');
 const { DATABASE_URL } = require('./Constants/KEYS');
 
@@ -57,9 +54,11 @@ app.use(ELEPHANT, elephantController.FIND_SPECFIC_ELEPHANTS);
 app.use(ELEPHANT, elephantController.CREATE_ELEPHANT);
 app.use(ELEPHANT, elephantController.UPDATE_ELEPHANT);
 
+app.use(express.static(__dirname + '/public'));
+app.use('/uploads', express.static('uploads'));
 
 // //FILE
-// app.use(FILE_UPLOAD, fileUploadController.FILE_UPLOAD);
+ app.use(FILE_UPLOAD_UPLOAD, fileUploadController.FILE_UPLOAD_REQUEST);
 
 app.use((req, res, next) => {
   const error = new Error("HELLO TO SERVER");

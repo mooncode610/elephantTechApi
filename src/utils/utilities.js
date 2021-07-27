@@ -57,7 +57,8 @@ exports.createElephant= (req) => {
         Date: new Date(),
         specialFeatures:req.body.specialFeatures,
         comments:req.body.comments,
-        images:req.body.images
+        images:req.body.images,
+        seenWith:req.body.seenWith,
     });
     return elephant;
 }
