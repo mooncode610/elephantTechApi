@@ -13,7 +13,7 @@ const {
     SUCCESS
 } = require('../Constants/StatusCode');
 const { generateMessage, } = require('../utils/generateMessage');
-const { createUser, findUser } = require('../utils/utilities');
+const { createUser, findUser,getAllUsers } = require('../utils/utilities');
 
 
 
@@ -46,6 +46,17 @@ exports.Login = async (req, res) => {
         } else {
             return res.status(UN_AUTH).json(generateMessage(USER_NOT_EXISTS, UN_AUTH, SUCCESS_FALSE, null))
         }
+    }
+    catch (error) {
+        return res.status(FAILED).json(generateMessage(error.message, FAILED, SUCCESS_FALSE, null))
+    }
+}
+
+exports.GetAllUsers = async (req, res) => {
+    try {
+        const result = await getAllUsers(req, res);
+        const { data } = result;
+        return res.status(SUCCESS).json(generateMessage(USER_EXISTS, SUCCESS, SUCCESS_TRUE, data));
     }
     catch (error) {
         return res.status(FAILED).json(generateMessage(error.message, FAILED, SUCCESS_FALSE, null))

@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 const UserSchema = mongoose.Schema({
     userId: mongoose.Types.ObjectId,
     name: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    profileImg: { type: String, required: true },
-    nicNumber: { type: String, required: true }
+    email: { type: String, required: true },
+    password: { type: String, required: true },
 });
 
 
