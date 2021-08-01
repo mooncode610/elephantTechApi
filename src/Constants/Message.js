@@ -4,6 +4,9 @@ exports.USER_SUCCESS_SIGNUP = 'User Signed up Successfully';
 exports.USER_SUCCESS_LOGIN = 'login Successfully';
 exports.USER_FAILED = 'User does not exits';
 exports.USER_AUTH_FAILED = 'Email Address and Password are Incorrect';
+exports.PASSWORD_CHANGE_SUCCESS = 'Password Changed Successfully';
+exports.PASSWORD_CHANGE_FAILED = 'Sorry! You dont have Access!';
+
 
 exports.SUCCESS_TRUE = true;
 exports.SUCCESS_FALSE = false;

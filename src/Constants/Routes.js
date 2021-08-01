@@ -1,5 +1,6 @@
 exports.USER = '/user';
 exports.USER_LOGIN = '/login';
+exports.FORGET_PASSWORD = '/changePassword';
 exports.USER_SIGNUP = '/signup';
 exports.USER_GET_ALL = '/getAllUser';
 

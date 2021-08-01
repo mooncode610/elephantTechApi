@@ -6,6 +6,8 @@ const {
     USER_AUTH_FAILED,
     SUCCESS_FALSE,
     SUCCESS_TRUE,
+    PASSWORD_CHANGE_SUCCESS,
+    PASSWORD_CHANGE_FAILED,
 } = require('../Constants/Message');
 const {
     FAILED,
@@ -14,7 +16,7 @@ const {
     SUCCESS
 } = require('../Constants/StatusCode');
 const { generateMessage, } = require('../utils/generateMessage');
-const { createUser, findUser,getAllUsers,comparePassword } = require('../utils/utilities');
+const { createUser, findUser,getAllUsers,comparePassword,changePassword } = require('../utils/utilities');
 
 
 
@@ -26,6 +28,8 @@ exports.SignUp = async (req, res) => {
         console.log("result",result);
         const { data } = result;
         if (!data) {
+        
+         
             const user = await createUser(req);
             console.log("saving user",user)
             await user.save();
@@ -39,10 +43,31 @@ exports.SignUp = async (req, res) => {
 }
 
 
+
+
+exports.ChangePassword = async (req, res) => {
+    try {
+        const result = await findUser(req, res);
+        console.log("result",result);
+        const { data } = result;
+        if (data) {
+            const user = await changePassword(req);
+            console.log("saving user",user)
+            await user.save();
+            return res.status(OK).json(generateMessage(PASSWORD_CHANGE_SUCCESS, SUCCESS, SUCCESS_TRUE, null));
+        }
+        return res.status(FAILED).json(generateMessage(PASSWORD_CHANGE_FAILED, FAILED, SUCCESS_FALSE, null));
+    }
+    catch (error) {
+        return res.status(FAILED).json(generateMessage(error.message, FAILED, SUCCESS_FALSE, null))
+    }
+}
+
 exports.Login = async (req, res) => {
     console.log(req.body)
     try {
         const result = await findUser(req, res);
+        console.log("result",result);
         const { data } = result;
         if (data && data.length > 0) {
             const userData = data[0];
