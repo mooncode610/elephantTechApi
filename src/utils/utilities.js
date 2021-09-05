@@ -58,6 +58,7 @@ exports.changePassword = async (req) => {
 exports.createElephant = (req) => {
   const elephant = new Elephant({
     elephantId: mongoose.Types.ObjectId(),
+    userId:req.body.userId,
     name: req.body.name,
     gender: req.body.gender,
     age: req.body.age,
@@ -74,10 +75,13 @@ exports.createElephant = (req) => {
 };
 
 exports.findElephant = async (req) => {
+  console.log("req.body",req.body);
   const data = await Elephant.find(req.body)
     .exec()
     .then((elephant) => {
+      console.log("Elephant",elephant)
       if (elephant.length !== 0) {
+     
         return generateMessage(
           ELEPHANT_EXISTS,
           SUCCESS,
