@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const elephantSchema = mongoose.Schema({
   elephantId: mongoose.Types.ObjectId,
+  userId:mongoose.Types.ObjectId,
   name: { type: String, required: true },
   gender: { type: String, required: true },
   age: { type: String, required: true },

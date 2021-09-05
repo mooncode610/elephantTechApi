@@ -39,6 +39,7 @@ exports.CreateElephant= async (req, res) => {
 exports.FindElephant = async (req, res) => {
     try {
         const result = await findElephant(req, res);
+        console.log("result",result);
         const { data } = result;
         if (data) {
             return res.status(OK).json(generateMessage(ELEPHANT_SUCCESS_GET, SUCCESS, SUCCESS_TRUE, data))
