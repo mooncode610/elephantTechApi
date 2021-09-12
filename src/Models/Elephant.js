@@ -14,6 +14,7 @@ const elephantSchema = mongoose.Schema({
   comments: { type: String },
   seenWith:{type:String},
   images: { type: Array },
+  addedBy:[]
 });
 
 module.exports = mongoose.model("Elephants", elephantSchema);

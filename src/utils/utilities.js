@@ -70,6 +70,7 @@ exports.createElephant = (req) => {
     comments: req.body.comments,
     images: req.body.images,
     seenWith: req.body.seenWith,
+    addedBy:req.body.addedBy
   });
   return elephant;
 };
