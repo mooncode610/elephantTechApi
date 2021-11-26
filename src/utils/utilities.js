@@ -11,6 +11,8 @@ const {
   ELEPHANT_EXISTS,
   ELEPHANT_NOT_EXISTS,
   ELEPHANT_SUCCESS_GET,
+  STATUS_UPDATE_SUCCESS,
+  STATUS_UPDATE_FAILED,
 } = require("../Constants/Message");
 const {
   OK,
@@ -28,34 +30,37 @@ const hashPassword = async (password) => {
     hashPasword = hash;
   });
   const hashedPasword = await bcrypt.hash(password, saltRounds);
-  console.log("HASH", hashedPasword);
+  //console.log("HASH", hashedPasword);
   return hashedPasword;
 };
 exports.comparePassword = async (password, hashPassword) => {
-  console.log("passwords", password, hashPassword);
+  //console.log("passwords", password, hashPassword);
   const result = await bcrypt.compare(password, hashPassword);
   return result;
 };
 
 exports.createUser = async (req) => {
+  console.log(req.body);
   const user = new User({
     userId: mongoose.Types.ObjectId(),
     name: req.body.name,
     email: req.body.email,
     password: await hashPassword(req.body.password),
   });
-  console.log("returning user", user);
+  console.log(user);
+  //console.log("returning user", user);
   return user;
 };
 exports.changePassword = async (req) => {
   const user = User.findOneAndUpdate({ email: req.body.email },
     {$set:{password:await hashPassword(req.body.password)}}
   );
-  console.log("returning user", user);
+  //console.log("returning user", user);
   return user;
 };
 
 exports.createElephant = (req) => {
+  console.log(req.body)
   const elephant = new Elephant({
     elephantId: mongoose.Types.ObjectId(),
     userId:req.body.userId,
@@ -65,6 +70,7 @@ exports.createElephant = (req) => {
     tusks: req.body.tusks,
     ears: req.body.ears,
     tail: req.body.tail,
+    gps: req.body.gps,
     Date: new Date(),
     specialFeatures: req.body.specialFeatures,
     comments: req.body.comments,
@@ -76,23 +82,94 @@ exports.createElephant = (req) => {
 };
 
 exports.findElephant = async (req) => {
-  console.log("req.body",req.body);
-  const data = await Elephant.find(req.body)
+  // console.log("find element req.body",req.body);
+  let filterData = []; 
+  for(let key in req.body) {
+    let temp = {};
+    temp[key] = req.body[key];
+    filterData = [
+      ...filterData,temp
+    ]
+  }
+  // console.log(filterData)
+  // const dataMatchedByOne = await Elephant.find({  "$or" : filterData })
+  //   .exec()
+  //   .then((elephant) => {
+  //     console.log("Elephant",elephant)
+  //     if (elephant.length !== 0) {
+        
+  //       return generateMessage(
+  //         ELEPHANT_EXISTS,
+  //         SUCCESS,
+  //         SUCCESS_TRUE,
+  //         elephant
+  //       );
+  //     }
+  //     return generateMessage(ELEPHANT_NOT_EXISTS, FAILED, SUCCESS_FALSE, null);
+  //   });
+  /*--------------------- get datas that equal some filter datas from filter Data.Not match all part of the data -S-------------------*/
+  const dataMatchedByOne = await Elephant.find({  "$or" : filterData })
     .exec()
     .then((elephant) => {
-      console.log("Elephant",elephant)
-      if (elephant.length !== 0) {
+      // console.log("Elephant",elephant)
      
-        return generateMessage(
-          ELEPHANT_EXISTS,
-          SUCCESS,
-          SUCCESS_TRUE,
-          elephant
-        );
-      }
-      return generateMessage(ELEPHANT_NOT_EXISTS, FAILED, SUCCESS_FALSE, null);
+      return elephant
     });
-  return data;
+  /*--------------------- get datas that equal some filter datas from filter Data.Not match all part of the data -E-------------------*/
+  
+
+  let result_num = [];
+  let point = 0;
+  for(let i in dataMatchedByOne){
+    result_num[i] = 0;
+    for(let key in req.body)
+      if(req.body[key] == dataMatchedByOne[i][key]) result_num[i] ++;
+  }
+  let j = 0;
+
+  for(let i = 0; i < result_num.length; i++){
+    const max = Math.max(...(result_num.slice(-result_num.length + i)));
+    const index = result_num.slice(-result_num.length + i).indexOf(max);
+    let temp = result_num.slice(-result_num.length + i)[index];
+    result_num[i+index] = result_num[i]
+    result_num[i] = temp;
+    temp = dataMatchedByOne.slice(-result_num.length + i)[index];
+    dataMatchedByOne[i+index] = dataMatchedByOne[i]
+    dataMatchedByOne[i] = temp;
+    // dataMatchedByOne[index] = dataMatchedByOne[i]
+    // dataMatchedByOne[i] = temp
+    // if(result_num[j] < result_num[i]){
+    //   let temp = result_num[j];
+    //   result_num[j] = result_num[i];
+    //   result_num[i] = temp;
+    //   temp = dataMatchedByOne[j]
+    //   dataMatchedByOne[j] = dataMatchedByOne[i]
+    //   dataMatchedByOne[i] = temp
+    //   j++; 
+    // }
+  }
+  return generateMessage(
+        ELEPHANT_EXISTS,
+        SUCCESS,
+        SUCCESS_TRUE,
+        dataMatchedByOne
+      );
+};
+exports.findElephant_byData = async (req) => {
+  const data = await Elephant.find(req.body)
+  .exec()
+  .then((elephant) => {
+    if (elephant.length !== 0) {
+      return generateMessage(
+        ELEPHANT_SUCCESS_GET,
+        SUCCESS,
+        SUCCESS_TRUE,
+        elephant
+      );
+    }
+    return generateMessage(ELEPHANT_NOT_EXISTS, FAILED, SUCCESS_FALSE, null);
+  });
+return data;
 };
 exports.findElephantById = async (req) => {
   const data = await Elephant.find({ elephantId: req.body.elephantId })
@@ -112,6 +189,7 @@ exports.findElephantById = async (req) => {
 };
 
 exports.updateElephant = async (req) => {
+  console.log('will update',req.body);
   const data = await Elephant.updateOne(
     { elephantId: req.body.elephantId },
     {
@@ -168,3 +246,20 @@ exports.getAllUsers = async (req) => {
     });
   return data;
 };
+
+exports.deleteElephant = async (req) => {
+  //console.log("delete Elephant", req.body)
+  const res =await Elephant.remove({ elephantId: (req.body.elephantId) }).setOptions({ single: true })
+  // const res =await Elephant.remove({ name: req.body.name }).setOptions({ single: true })
+  //console.log('res is', res)
+  if(res.deletedCount > 0) {
+    return generateMessage(
+      ELEPHANT_SUCCESS_GET,
+      SUCCESS,
+      SUCCESS_TRUE,
+      res
+    );
+  }
+  return generateMessage(ELEPHANT_NOT_EXISTS, FAILED, SUCCESS_FALSE, null);
+};
+

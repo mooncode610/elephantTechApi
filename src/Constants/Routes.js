@@ -11,6 +11,7 @@ exports.ELEPHANT_GET_BY_ID = '/getElephant';
 exports.ELEPHANT_GET_ALL = '/getAllElephant';
 exports.ELEPHANT_UPDATE = '/updateElephant';
 exports.ELEPHANT_SPECIFIC = '/getSpecificElephant';
+exports.ELEPHANT_DELETE = '/deleteElephant';
 
 exports.FILE_UPLOAD = '/fileUpload';
 exports.FILE_UPLOAD_UPLOAD = '/upload';
