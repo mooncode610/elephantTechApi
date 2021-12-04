@@ -43,7 +43,6 @@ exports.CreateElephant= async (req, res) => {
 exports.FindElephant = async (req, res) => {
     try {
         const result = await findElephant(req, res);
-        //console.log("result",result);
         const { data } = result;
         if (data) {
             return res.status(OK).json(generateMessage(ELEPHANT_SUCCESS_GET, SUCCESS, SUCCESS_TRUE, data))
@@ -57,7 +56,6 @@ exports.FindElephant = async (req, res) => {
 }
 
 exports.GetAllElephants = async (req, res) => {
-    //console.log('req')
     try {
         const result = await getAllElephants(req, res);
         const { data } = result;
@@ -73,7 +71,6 @@ exports.GetElephantById = async (req, res) => {
     try {
         const result = await findElephantById(req)
         const { data, success } = result;
-        //console.log("data", result)
         if (success) {
             return res.status(OK).json(generateMessage(ELEPHANT_SUCCESS_UPDATE, SUCCESS, SUCCESS_TRUE, data))
         } else {
@@ -87,7 +84,6 @@ exports.GetElephantById = async (req, res) => {
 
 
 exports.UpdateElephant = async (req, res) => {
-//console.log("updateElephatn",req);
     try {
         const result = await updateElephant(req);
         const { success } = result;
