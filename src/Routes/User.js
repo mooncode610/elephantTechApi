@@ -25,13 +25,9 @@ const { createUser, findUser,getAllUsers,comparePassword,changePassword } = requ
 exports.SignUp = async (req, res) => {
     try {
         const result = await findUser(req, res);
-        //console.log("result",result);
         const { data } = result;
         if (!data) {
-        
-         
             const user = await createUser(req);
-            //console.log("saving user",user)
             await user.save();
             return res.status(OK).json(generateMessage(USER_SUCCESS_SIGNUP, OK, SUCCESS_TRUE, null));
         }
@@ -48,11 +44,9 @@ exports.SignUp = async (req, res) => {
 exports.ChangePassword = async (req, res) => {
     try {
         const result = await findUser(req, res);
-        //console.log("result",result);
         const { data } = result;
         if (data) {
             const user = await changePassword(req);
-            //console.log("saving user",user)
             await user.save();
             return res.status(OK).json(generateMessage(PASSWORD_CHANGE_SUCCESS, SUCCESS, SUCCESS_TRUE, null));
         }
@@ -64,10 +58,8 @@ exports.ChangePassword = async (req, res) => {
 }
 
 exports.Login = async (req, res) => {
-    //console.log(req.body)
     try {
         const result = await findUser(req, res);
-        //console.log("result",result);
         const { data } = result;
         if (data && data.length > 0) {
             const userData = data[0];

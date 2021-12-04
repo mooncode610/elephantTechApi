@@ -30,37 +30,30 @@ const hashPassword = async (password) => {
     hashPasword = hash;
   });
   const hashedPasword = await bcrypt.hash(password, saltRounds);
-  //console.log("HASH", hashedPasword);
   return hashedPasword;
 };
 exports.comparePassword = async (password, hashPassword) => {
-  //console.log("passwords", password, hashPassword);
   const result = await bcrypt.compare(password, hashPassword);
   return result;
 };
 
 exports.createUser = async (req) => {
-  console.log(req.body);
   const user = new User({
     userId: mongoose.Types.ObjectId(),
     name: req.body.name,
     email: req.body.email,
     password: await hashPassword(req.body.password),
   });
-  console.log(user);
-  //console.log("returning user", user);
   return user;
 };
 exports.changePassword = async (req) => {
   const user = User.findOneAndUpdate({ email: req.body.email },
     {$set:{password:await hashPassword(req.body.password)}}
   );
-  //console.log("returning user", user);
   return user;
 };
 
 exports.createElephant = (req) => {
-  console.log(req.body)
   const elephant = new Elephant({
     elephantId: mongoose.Types.ObjectId(),
     userId:req.body.userId,
@@ -82,7 +75,6 @@ exports.createElephant = (req) => {
 };
 
 exports.findElephant = async (req) => {
-  // console.log("find element req.body",req.body);
   let filterData = []; 
   for(let key in req.body) {
     let temp = {};
@@ -91,7 +83,6 @@ exports.findElephant = async (req) => {
       ...filterData,temp
     ]
   }
-  // console.log(filterData)
   // const dataMatchedByOne = await Elephant.find({  "$or" : filterData })
   //   .exec()
   //   .then((elephant) => {
@@ -111,7 +102,6 @@ exports.findElephant = async (req) => {
   const dataMatchedByOne = await Elephant.find({  "$or" : filterData })
     .exec()
     .then((elephant) => {
-      // console.log("Elephant",elephant)
      
       return elephant
     });
@@ -189,7 +179,6 @@ exports.findElephantById = async (req) => {
 };
 
 exports.updateElephant = async (req) => {
-  console.log('will update',req.body);
   const data = await Elephant.updateOne(
     { elephantId: req.body.elephantId },
     {
@@ -198,7 +187,6 @@ exports.updateElephant = async (req) => {
   )
     .exec()
     .then((elephant) => {
-      console.log("updated", elephant);
       if (elephant.ok !== 0) {
         return generateMessage(STATUS_UPDATE_SUCCESS, OK, SUCCESS_TRUE, null);
       }
@@ -248,10 +236,8 @@ exports.getAllUsers = async (req) => {
 };
 
 exports.deleteElephant = async (req) => {
-  //console.log("delete Elephant", req.body)
   const res =await Elephant.remove({ elephantId: (req.body.elephantId) }).setOptions({ single: true })
   // const res =await Elephant.remove({ name: req.body.name }).setOptions({ single: true })
-  //console.log('res is', res)
   if(res.deletedCount > 0) {
     return generateMessage(
       ELEPHANT_SUCCESS_GET,
